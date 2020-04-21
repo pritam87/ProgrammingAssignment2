@@ -2,20 +2,22 @@
 makeCacheMatrix <- function(x = matrix()) {
     ## Creates a special "matrix" object that can cache its inverse.
 
-    inv <- NULL
+    inv <- NULL                                         # initialize inverse with NULL
     
-    set <- function(y) {
-        x <<- y
+    setMatrix <- function(m) {                          # mutator function for setting matrix
+        x <<- m
         inv <<- NULL
     }
     
-    get <- function() x
+    getMatrix <- function() x                           # accessor function for getting matrix
     
-    setinverse <- function(inverse) inv <<- inverse
+    setInverse <- function(inverse) inv <<- inverse     # mutator function for setting inverse
     
-    getinverse <- function() inv
+    getInverse <- function() inv                        # accessor function for getting inverse
     
-    list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)
+    list(set = setMatrix, get = getMatrix, 
+         setinverse = setInverse, 
+         getinverse = getInverse)               # return a list containing all accessor & mutator functions
 }
 
 
@@ -24,17 +26,17 @@ cacheSolve <- function(x, ...) {
     ##  If the inverse has already been calculated (and the matrix has not changed), 
     ##  then it retrieves the inverse from the cache.
     
-    inv <- x$getinverse()   # attempts to fetch cached value of inverse
+    inv <- x$getinverse()           # attempts to fetch cached value of inverse
     
-    if(!is.null(inv)) {     # checks whether a cached value exists
-        return(inv)         # if it exists, returns cached value of inverse
+    if(!is.null(inv)) {             # checks whether a cached value exists
+        return(inv)                 # if it exists, returns cached value of inverse
     }
     
-    data <- x$get()         # otherwise, fetches the new/updated matrix
+    data <- x$get()                 # otherwise, fetches the new/updated matrix
  
-    inv <- solve(data, ...) # computes the inverse of matrix fetched above 
+    inv <- solve(data, ...)         # computes the inverse of matrix fetched above 
     
-    x$setinverse(inv)       # caches the value of inverse computed above
+    x$setinverse(inv)               # caches the value of inverse computed above
     
-    inv                     # returns the freshly computed value of inverse
+    inv                             # returns the freshly computed value of inverse
 }
